@@ -126,16 +126,6 @@ def play(state, move):
                 itsVert = False
             elif y == oldY:
                 itsVert = True
-        else:
-            oldX = x
-            oldY = y
-
-        if state[x, y] == 0:
-            itsOkay = True
-        else:
-            """print("You can't do this move")"""
-            itsOkay = False
-            return []
         cpt += 1
 
     for (x, y) in move:
