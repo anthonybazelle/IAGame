@@ -33,6 +33,26 @@ board = np.zeros((sizeBoard, sizeBoard))
 
 moveHorizontal = []
 moveVertical = []
+hashTable = {}
+
+"""
+def finHash(state):
+    hash = 0
+    for x in range(0, sizeBoard):
+        for y in range(0, sizeBoard):
+            if state[x, y] != 0:
+                piece = state[x, y]
+                hash ^= ?????
+    return hash
+
+def addToHashTable(state):
+    hash = findHash(state)
+        TODO : hashTable[Hash] = (mean, sumPlayouts, tabPlayouts[])
+    hashTable[hash] = (mean, sumPlayouts, [])
+"""
+
+def clearBoard(state):
+    state = np.zeros((sizeBoard, sizeBoard))
 
 def playout(state):
     print("Playout")
@@ -119,7 +139,7 @@ def play(state, move):
     oldX = 0
     oldY = 0
 
-    print(state)
+    """print(state)"""
     for (x, y) in move:
         if cpt == 1:
             if x == oldX:
@@ -140,15 +160,39 @@ def seen(state):
     print("seen")
 
 
+def uct(state):
+	if terminal(state):
+		return score(state)
+	moves = legalMoves(state)
+	t = seen(state)
+	if t!= None:
+		best = argmax(t.mean[i] + c * sqrt(log(t.sumPlayouts) / t.playouts[i]))
+		state = play(state, moves[best])
+		res = UCT(state)
+		"""update t with res"""
+	else:
+		"""t = new entry in transposition table"""
+		res = playout(state)
+		"""update t with res"""
+	return res
+
+
 """ ----------------------- MAIN -----------------------"""
 
-winner = playout(board)
+cpt = 0
+for i in range(0, 1000):
+    clearBoard(board)
+    winner = playout(board)
+    if winner == True:
+        print("Horizontal player win")
+        cpt += 1
+    else:
+        print("Vertical player win")
+    i = i + 1
 
-if winner == True:
-    print("Horizontal player win")
-else:
-    print("Vertical player win")
-
+meanH = cpt / 1000
+print("Mean win by horizontal player on 1000 playout :")
+print(meanH)
 
 """
 print("MoveHorizontal")
