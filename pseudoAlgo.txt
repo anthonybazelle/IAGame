@@ -1,0 +1,15 @@
+def UCT(state):
+	if terminal(state):
+		return score(state)
+	moves = legalMoves(state)
+	t = seen(state)
+	if t!= None:
+		best = argmax(t.mean[i] + c * sqrt(log(t.sumPlayouts) / t.playouts[i]))
+		state = play(state, moves[best])
+		res = UCT(state)
+		update t with res
+	else:
+		t = new entry in transposition table
+		res = playout(state)
+		update t with res
+	return res

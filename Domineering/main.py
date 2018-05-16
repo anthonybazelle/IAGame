@@ -27,6 +27,8 @@ print(model.predict(numpy.array(X)))"""
 
 import numpy as np
 from random import randint
+from operator import xor
+
 
 sizeBoard = 9
 board = np.zeros((sizeBoard, sizeBoard))
@@ -35,6 +37,26 @@ moveHorizontal = []
 moveVertical = []
 hashTable = {}
 
+
+"""xor(bool(a), bool(b))"""
+
+class State:
+    """ Correspond a un noeud de l'arbre """
+    def __init__(self, parent):
+        self.board = np.zeros((sizeBoard, sizeBoard))
+        self.total = 0
+        self.passage = 0
+        self.parent = parent
+        self.child = []
+
+
+    def __init__(self):
+        self.board = np.zeros((sizeBoard, sizeBoard))
+        self.total = 0
+        self.passage = 0
+        self.parent = None
+        self.child = []
+    
 """
 def finHash(state):
     hash = 0
@@ -159,7 +181,7 @@ def play(state, move):
 def seen(state):
     print("seen")
 
-
+"""
 def uct(state):
 	if terminal(state):
 		return score(state)
@@ -169,13 +191,13 @@ def uct(state):
 		best = argmax(t.mean[i] + c * sqrt(log(t.sumPlayouts) / t.playouts[i]))
 		state = play(state, moves[best])
 		res = UCT(state)
-		"""update t with res"""
+		update t with res
 	else:
-		"""t = new entry in transposition table"""
+		t = new entry in transposition table
 		res = playout(state)
-		"""update t with res"""
+		update t with res
 	return res
-
+"""
 
 """ ----------------------- MAIN -----------------------"""
 
