@@ -48,6 +48,7 @@ class State:
         self.passage = 1
         self.move = move
         self.mean = 0
+        self.turn = 0
     
 
 def setRandomValue(board):
@@ -179,6 +180,8 @@ def play(state, move):
     hashTable[hash] = newStateToHash
     return state
 
+
+
 def seen(state):
     print("seen")
     hash = 0
@@ -196,7 +199,11 @@ def uct(state):
 	moves = legalMoves(state)
 	t = seen(state)
 	if t!= None:
-		best = argmax(t.mean[i] + c * sqrt(log(t.sumPlayouts) / t.playouts[i]))
+	    t.sumPlayout -> nbPassageNoeudCourrant
+	    t.playouts[i] -> nbPassageNoeurFilsAIndexI
+	    
+	    for 
+		    best = argmax(t.mean[i] + c * sqrt(log(t.sumPlayouts) / t.playouts[i]))
 		state = play(state, moves[best])
 		res = UCT(state)
 		update t with res
