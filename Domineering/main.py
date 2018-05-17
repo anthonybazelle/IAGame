@@ -27,8 +27,6 @@ print(model.predict(numpy.array(X)))"""
 
 import numpy as np
 from random import randint
-from operator import xor
-
 
 sizeBoard = 9
 board = np.zeros((sizeBoard, sizeBoard))
