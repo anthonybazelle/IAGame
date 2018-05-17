@@ -32,13 +32,15 @@ from operator import xor
 
 sizeBoard = 9
 board = np.zeros((sizeBoard, sizeBoard))
-
+rdmValue = np.zeros((sizeBoard, sizeBoard))
 moveHorizontal = []
 moveVertical = []
 hashTable = {}
 
 
 """xor(bool(a), bool(b))"""
+
+
 
 class State:
     """ Correspond a un noeud de l'arbre """
@@ -57,16 +59,24 @@ class State:
         self.parent = None
         self.child = []
     
-"""
-def finHash(state):
+
+def setRandomValue(board):
+    cpt = 0
+    for x in range(0, sizeBoard - 1):
+        for y in range(0, sizeBoard - 1):
+            rdmValue[x, y] = randint(0 + cpt, 499 + cpt)
+            cpt += 500
+
+def setHash(state):
     hash = 0
     for x in range(0, sizeBoard):
         for y in range(0, sizeBoard):
             if state[x, y] != 0:
                 piece = state[x, y]
-                hash ^= ?????
+                hash ^= int(rdmValue[x, y])
     return hash
 
+"""
 def addToHashTable(state):
     hash = findHash(state)
         TODO : hashTable[Hash] = (mean, sumPlayouts, tabPlayouts[])
@@ -176,6 +186,8 @@ def play(state, move):
         elif itsVert == False:
             state[x, y] = 2
 
+    hash = setHash(state)
+    hashTable[hash] = state
     return state
 
 def seen(state):
@@ -201,6 +213,11 @@ def uct(state):
 
 """ ----------------------- MAIN -----------------------"""
 
+setRandomValue(board)
+winner = playout(board)
+print(hashTable)
+
+"""
 cpt = 0
 for i in range(0, 1000):
     clearBoard(board)
@@ -212,10 +229,11 @@ for i in range(0, 1000):
         print("Vertical player win")
     i = i + 1
 
+print(cpt)
 meanH = cpt / 1000
 print("Mean win by horizontal player on 1000 playout :")
 print(meanH)
-
+"""
 """
 print("MoveHorizontal")
 print(moveHorizontal)
