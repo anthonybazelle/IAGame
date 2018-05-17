@@ -44,28 +44,17 @@ hashTable = {}
 
 class State:
     """ Correspond a un noeud de l'arbre """
-    def __init__(self, parent):
-        self.board = np.zeros((sizeBoard, sizeBoard))
+    """ param : coup joué pour cet état (donc cet hashcode) / total res / Nombre de passage / a qui le tour de jouer """
+    def __init__(self, move):
         self.total = 0
         self.passage = 0
-        self.parent = parent
-        self.child = []
-
-
-    def __init__(self):
-        self.board = np.zeros((sizeBoard, sizeBoard))
-        self.total = 0
-        self.passage = 0
-        self.parent = None
-        self.child = []
+        self.move = move
     
 
 def setRandomValue(board):
-    cpt = 0
     for x in range(0, sizeBoard - 1):
         for y in range(0, sizeBoard - 1):
-            rdmValue[x, y] = randint(0 + cpt, 499 + cpt)
-            cpt += 500
+            rdmValue[x, y] = randint(0 , 9000000000000000000)
 
 def setHash(state):
     hash = 0
