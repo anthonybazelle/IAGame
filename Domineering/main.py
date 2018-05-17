@@ -47,8 +47,9 @@ class State:
     """ param : coup joué pour cet état (donc cet hashcode) / total res / Nombre de passage / a qui le tour de jouer """
     def __init__(self, move):
         self.total = 0
-        self.passage = 0
+        self.passage = 1
         self.move = move
+        self.mean = 0
     
 
 def setRandomValue(board):
@@ -176,11 +177,19 @@ def play(state, move):
             state[x, y] = 2
 
     hash = setHash(state)
-    hashTable[hash] = state
+    newStateToHash = State(move)
+    hashTable[hash] = newStateToHash
     return state
 
 def seen(state):
     print("seen")
+    hash = 0
+    for x in range(0, sizeBoard):
+        for y in range(0, sizeBoard):
+            if state[x, y] != 0:
+                piece = state[x, y]
+                hash ^= int(rdmValue[x, y])
+    return hashTable[hash]
 
 """
 def uct(state):
