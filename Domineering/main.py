@@ -1,6 +1,6 @@
 import numpy as np
 from random import randint
-
+import math
 
 """-------------------- GLOBAL VALUE ----------------------"""
 sizeBoard = 8
@@ -147,8 +147,8 @@ def seen(state):
 	print("seen")
 	global bug
 	hash = 0
-	for x in range(0, sizeBoard - 1):
-		for y in range(0, sizeBoard - 1):
+	for x in range(0, sizeBoard):
+		for y in range(0, sizeBoard):
 			if state[x, y] != 0:
 				piece = state[x, y]
 				hash ^= int(rdmValue[x, y])
@@ -168,21 +168,35 @@ def selectBestMoveIndex(hashCurrentNode, currentNode):
 	indice = 0
 
 	"""argmax(t.mean[i] + c * sqrt(log(t.sumPlayouts) / t.playouts[i]))"""
-	for i in range(0, len(moves) - 1):
+	for i in range(0, len(moves)):
 		viergeBoard = np.zeros((sizeBoard, sizeBoard))
-		stateMove = play(viergeBoard, moves[i])
+		stateMove = play(viergeBoard, moves[i], currentNode.turn)
 		hashMove = getHash(stateMove)
-		hashChild = hashMove ^ hashCurrentNode
-		child = seen(hashChild)
+		print("hashCurrentNode :")
+		print(hashCurrentNode)
+		print("hashMove :")
+		print(hashMove)
+		hashChild = int(hashMove) ^ int(hashCurrentNode)
+
+		if hashChild not in hashTable.keys():
+			newS = State(moves[i])
+			hashTable[hashChild] = newS
+
+		child = hashTable[hashChild]
 
 		if child == None:
 			print("NO CHILD IN SELECT BEST MOVE INDEX !")
 			child = State(stateMove)
+			turnChild = 0
+			if currentNode.turn == 0:
+				turnChild = 1
+
+			child.turn = turnChild
 			hashTable[hashChild] = child
 
 		mean = child.total / child.passage
-		c = sqrt(2)
-		res = mean + c * sqrt(log(currentNode.passage) / child.passage)
+		c = math.sqrt(2)
+		res = mean + c * math.sqrt(math.log10(currentNode.passage) / child.passage)
 		if res > maxValue:
 			maxValue = res
 			indice = i
@@ -203,8 +217,18 @@ def uct(boardParam, move):
 		elif t.turn == 1:
 			moves = moveHorizontal
 		best = selectBestMoveIndex(hashState, t)
-		boardParam = play(boardParam, moves[best])
-		res = UCT(boardParam, best)
+		"""
+		print("Length moves:")
+		print(len(moves))
+		print("Best index:")
+		print(best)
+		"""
+		if len(moves) == 0:
+			hashParent = hashState ^ move
+			return hashTable[hashParent].turn
+
+		boardParam = play(boardParam, moves[best], t.turn)
+		res = uct(boardParam, best)
 		if res == 0:
 			res = 1
 			t.total += res
@@ -223,17 +247,23 @@ setRandomValue()
 
 for i in range(0, 1000):
 	board = np.zeros((sizeBoard, sizeBoard))
+	print("||||||||||||||||||||||||||||||||||||||||||||||||")
 	winner = playout(board)
 
 print(len(hashTable))
 
+resUCT = []
+
 for i in range(0, 100):
 	board = np.zeros((sizeBoard, sizeBoard))
-	if seen(board) not in hashTable.keys():
+	if getHash(board) not in hashTable.keys():
 		newState = State(None)
-		hashTable[seen(board)] = newState
-	uct(board, selectBestMoveIndex(seen(board), hashTable[seen(board)]))
+		hashTable[getHash(board)] = newState
+	newResUCT = uct(board, selectBestMoveIndex(getHash(board), seen(board)))
+	resUCT.append(newResUCT)
 
+print("RES UCT :")
+print(resUCT)
 """
 cpt = 0
 for i in range(0, 1000):
